@@ -1,28 +1,27 @@
 
 public class Livro {
-    //atributos do livro
     private String titulo;
     private String autor;
     private int ano;
+    private StatusLivro status;
 
     public Livro(String titulo, String autor, int ano) {
-        //validação
         setTitulo(titulo);
         setAutor(autor);
         setAno(ano);
+        this.status = StatusLivro.DISPONIVEL;
     }
 
-    public int getAno() {  //vai retornar o ano que ta no atributo ano
+    public int getAno() {
         return ano;
     }
 
     public void setAno(int ano) {
-        //atribui valor ao ano e valida
         int ano_atual = 2025;
         if (ano > ano_atual) {
             System.out.println("Erro: ano inválido.");
         } else {
-            this.ano = ano; //armazena
+            this.ano = ano;
         }
     }
 
@@ -44,18 +43,22 @@ public class Livro {
 
     public void setAutor(String autor) {
         if (autor == "") {
-            System.out.println("Erro: autor inválido.");
+            System.out.println("Erro: título inválido.");
         } else {
             this.autor = autor;
         }
     }
 
     @Override
-    public String toString() {//substitui o modelo feio de mostrar o endereço da memoria e mostra o texto
-        return "Livro{" +
-                "titulo='" + titulo + '\'' +
-                ", autor='" + autor + '\'' +
-                ", ano=" + ano +
-                '}';
+    public String toString() {
+        return "Livro '" + titulo + "', de " + autor + " (" + ano + ") - Status: " + status;
+    }
+
+    public StatusLivro getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusLivro status) {
+        this.status = status;
     }
 }

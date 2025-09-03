@@ -34,5 +34,5 @@ public class Emprestimo {
     public void setDataEmprestimo(LocalDate dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
     }
-}{
+
 }

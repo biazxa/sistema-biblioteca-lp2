@@ -38,6 +38,7 @@ public class Livro {
     }
 
     public String getAutor() {
+
         return autor;
     }
 
@@ -55,10 +56,12 @@ public class Livro {
     }
 
     public StatusLivro getStatus() {
+
         return status;
     }
 
     public void setStatus(StatusLivro status) {
+
         this.status = status;
     }
 }

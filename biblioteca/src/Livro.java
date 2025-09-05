@@ -49,16 +49,16 @@ public class Livro {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Livro '" + titulo + "', de " + autor + " (" + ano + ") - Status: " + status;
-    }
-
     public StatusLivro getStatus() {
         return status;
     }
 
     public void setStatus(StatusLivro status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Livro '" + titulo + "', de " + autor + " (" + ano + ") - Status: " + status;
     }
 }

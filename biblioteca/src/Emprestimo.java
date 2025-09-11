@@ -1,24 +1,24 @@
 import java.time.LocalDate;
 
 public class Emprestimo {
-    private Livro livro;
+    private ItemDoAcervo item;
     private Usuario usuario;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucaoPrevista;
-    private LocalDate dataDevolucaoReal;
 
-    public Emprestimo(Livro livro, Usuario usuario, LocalDate dataEmprestimo) {
-        this.livro = livro;
+    public Emprestimo(ItemDoAcervo item, Usuario usuario, LocalDate dataEmprestimo, LocalDate dataDevolucaoPrevista) {
+        this.item = item;
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
+        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
     }
 
-    public Livro getLivro() {
-        return livro;
+    public ItemDoAcervo getItem() {
+        return  item;
     }
 
-    public void setLivro(Livro livro) {
-        this.livro = livro;
+    public void setItem(ItemDoAcervo item) {
+        this.item = item;
     }
 
     public Usuario getUsuario() {
@@ -36,5 +36,21 @@ public class Emprestimo {
     public void setDataEmprestimo(LocalDate dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
     }
-}{
+
+    public LocalDate getDataDevolucaoPrevista() {
+        return dataDevolucaoPrevista;
+    }
+    public void setDataDevolucaoPrevista(LocalDate dataDevolucaoPrevista) {
+        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
+    }
+
+    @Override
+    public String toString() {
+        return "Emprestimo{" +
+                "livro=" + item.getTitulo() +
+                ", usuario=" + usuario.getName() +
+                ", dataEmprestimo=" + dataEmprestimo +
+                ", dataDevolucaoPrevista=" + dataDevolucaoPrevista +
+                '}';
+    }
 }

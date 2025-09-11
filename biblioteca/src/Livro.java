@@ -1,67 +1,42 @@
+public class Livro extends ItemDoAcervo {
 
-public class Livro {
-    private String titulo;
     private String autor;
-    private int ano;
-    private StatusLivro status;
 
-    public Livro(String titulo, String autor, int ano) {
-        setTitulo(titulo);
-        setAutor(autor);
-        setAno(ano);
-        this.status = StatusLivro.DISPONIVEL;
-    }
 
-    public int getAno() {
-        return ano;
-    }
+    public Livro(String titulo, String autor, int ano){
 
-    public void setAno(int ano) {
-        int ano_atual = 2025;
-        if (ano > ano_atual) {
-            System.out.println("Erro: ano inválido.");
-        } else {
-            this.ano = ano;
-        }
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        if (titulo == "") {
-            System.out.println("Erro: título inválido.");
-        } else {
-            this.titulo = titulo;
-        }
+        super(titulo,ano);
+        this.autor = autor;
     }
 
     public String getAutor() {
 
         return autor;
     }
-
     public void setAutor(String autor) {
         if (autor == "") {
-            System.out.println("Erro: título inválido.");
-        } else {
+            System.out.println("ERRO: autor invalido.");
+        }else{
             this.autor = autor;
         }
     }
 
-    public StatusLivro getStatus() {
-
-        return status;
-    }
-
-    public void setStatus(StatusLivro status) {
-
-        this.status = status;
+    @Override
+    public int getPrazo(){
+        return 14;
     }
 
     @Override
-    public String toString() {
-        return "Livro '" + titulo + "', de " + autor + " (" + ano + ") - Status: " + status;
+    public double getValorMultaPorDiaAtraso(){
+        return 0.75;
     }
+
+
+    @Override
+    public String toString() {
+        return "Livro '" + getTitulo() + "', de " + getAutor() + " (" + getAno() + ") - Status: " + getStatus();
+    }
+
+
+
 }

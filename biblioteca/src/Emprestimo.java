@@ -1,18 +1,21 @@
 import java.time.LocalDate;
 
 public class Emprestimo {
-    private ItemDoAcervo item;
+    //cria os atributos
+    private ItemDoAcervo item; //item armazena um itemdoacervo
     private Usuario usuario;
     private LocalDate dataEmprestimo;
     private LocalDate dataDevolucaoPrevista;
 
     public Emprestimo(ItemDoAcervo item, Usuario usuario, LocalDate dataEmprestimo, LocalDate dataDevolucaoPrevista) {
+        //cria novos obj e armazena
         this.item = item;
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
         this.dataDevolucaoPrevista = dataDevolucaoPrevista;
     }
-
+    // get ==> retorna o valor
+    // set ==> altera o valor
     public ItemDoAcervo getItem() {
         return  item;
     }

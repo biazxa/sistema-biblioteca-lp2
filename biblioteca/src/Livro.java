@@ -1,11 +1,11 @@
-public class Livro extends ItemDoAcervo {
+public class Livro extends ItemDoAcervo { //extends é herdar tudo do ItemDoAcervo
 
     private String autor;
 
 
     public Livro(String titulo, String autor, int ano){
 
-        super(titulo,ano);
+        super(titulo,ano); //super acessa a superclasse/classe pai(itemdoacervo) reutiliza a logica,vai herdar
         this.autor = autor;
     }
 
@@ -21,7 +21,7 @@ public class Livro extends ItemDoAcervo {
         }
     }
 
-    @Override
+    @Override //muda ou customiza um comportamento
     public int getPrazo(){
         return 14;
     }

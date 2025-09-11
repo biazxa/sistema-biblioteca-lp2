@@ -1,143 +1,138 @@
+import javax.swing.*;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
-import javax.swing.*;
 
-public class Biblioteca{
+public class Biblioteca {
+    //cria os atributos(carcteristicas) da classe
+    private List<Livro> acervo; //uma lista acervo que vai receber livrod
+    private List<Usuario> listaDeUsuarios;
+    private List<Emprestimo> registrosDeEmprestimos;
+    //define valores padroes que n podem ser mudados
+    private static final int PRAZO_EMPRESTIMO_DIAS = 14;
+    private static final double VALOR_MULTA_DIA = 0.75;
 
-    private List<ItemDoAcervo> acervo;
-    private List<Usuario> listaUsuarios;
-    private List<Emprestimo> registroDeEmprestimos;
-
-
-
-    public Biblioteca(){
-
+    public Biblioteca() {
+        //inicializa as listas vazias
         this.acervo = new ArrayList<>();
-        this.listaUsuarios = new ArrayList<>();
-        this.registroDeEmprestimos = new ArrayList<>();
+        this.listaDeUsuarios = new ArrayList<>();
+        this.registrosDeEmprestimos = new ArrayList<>();
     }
 
-
-    public void realizarEmprestimo(String UserUsuario, String titulo) {
-        Usuario usuarioDoEmprestimo = pesquisarUsuarioPorUser(UserUsuario);
-        if (usuarioDoEmprestimo == null) {
-            System.out.println("Erro: esse usuário não está cadastrado.");
+    public void realizarEmprestimo(String idUsuario, String titulo) {
+        // 1 - Buscar os objetos usuario e livro
+        Usuario usuarioDoEmprestimo = pesquisarUsuarioPorId(idUsuario); //usa o metodo e armazena nessa variavel
+        if(usuarioDoEmprestimo == null) {
+            System.out.println("Erro: usuário não cadastrado.");
             return;
         }
-        ItemDoAcervo livroDoEmprestimo = pesquisarItemPorTitulo(titulo);
-        if (livroDoEmprestimo == null) {
-            System.out.println("Erro: esse livro não está cadastrado.");
+        Livro livroDoEmprestimo = pesquisarLivroPorTitulo(titulo);
+        if(livroDoEmprestimo == null) {
+            System.out.println("Erro: livro não cadastrado.");
             return;
         }
-        if (livroDoEmprestimo.getStatus() == StatusLivro.EMPRESTADO) {
-            System.out.println("Erro: esse livro já está emprestado.");
+        // (verificar se o livro está disponível)
+        if(livroDoEmprestimo.getStatus() == StatusLivro.EMPRESTADO) {
+            System.out.println("Erro: livro já emprestrado.");
             return;
         }
-
-        LocalDate hoje = LocalDate.now();
-        LocalDate devolucaoPrevista = hoje.plusDays(livroDoEmprestimo.getPrazo());
-
-        livroDoEmprestimo.setStatus(StatusLivro.EMPRESTADO);
-        Emprestimo emprestimo = new Emprestimo(livroDoEmprestimo, usuarioDoEmprestimo, hoje, devolucaoPrevista );
-        registroDeEmprestimos.add(emprestimo);
-        System.out.println("Emprestimo cadastrado com sucesso.");
-        System.out.println( "O livro " + livroDoEmprestimo.getTitulo() + " foi emprestado para o usuario " + usuarioDoEmprestimo.getName() + " na data " + emprestimo.getDataEmprestimo() + " e a data de devolução é " + emprestimo.getDataDevolucaoPrevista() );
-    }
-    public void cadastrarItem(ItemDoAcervo item){
-        this.acervo.add(item);
-        System.out.println("Livro "+ item.getTitulo() + " adicionado no acervo");
+        // se passar nessas condições,ele vem pra cá
+        livroDoEmprestimo.setStatus(StatusLivro.EMPRESTADO); //altera o estado do livro
+        LocalDate dataEmprestimo = LocalDate.now(); //registra a data
+        LocalDate dataDevolucaoPrevista = dataEmprestimo.plusDays(PRAZO_EMPRESTIMO_DIAS); //calcula a data para devolução
+        Emprestimo emprestimo = new Emprestimo(livroDoEmprestimo, usuarioDoEmprestimo, dataEmprestimo, dataDevolucaoPrevista); //cria um obj que vai receber tufo isso
+        registrosDeEmprestimos.add(emprestimo); //guarda ba lista
+        System.out.println("Emprestimo realizado com sucesso!");
+        System.out.println("O livro '"+livroDoEmprestimo.getTitulo()
+                +"' foi emprestado para o usuário " + usuarioDoEmprestimo.getName()
+                +" na data " + emprestimo.getDataEmprestimo()
+                +" e tem de ser devolvido em " + emprestimo.getDataDevolucaoPrevista());
     }
 
-    public void cadastrarUsuario(Usuario usuario){
-        listaUsuarios.add(usuario);
-        System.out.println("Usuario "+ usuario.getUser() + " adicionado no acervo");
-    }
-
-    public ItemDoAcervo pesquisarItemPorTitulo(String titulo){
-        for ( ItemDoAcervo item : this.acervo){
-            if(item.getTitulo().equalsIgnoreCase(titulo)) {
-                return item ;
-            }
-        }
-        return null;
-    }
-
-    public Usuario pesquisarUsuarioPorUser(String User) {
-        for(Usuario usuario : this.listaUsuarios) {
-            if(usuario.getUser().equals(User)) {
-                return usuario;
-            }
-        }
-        return null;
-    }
-    public List<ItemDoAcervo> pesquisarItemPorTermo(String termo) {
-        List<ItemDoAcervo> listaDeLivros = new ArrayList<>();
-        for (var item : acervo) {
-            if(item.getTitulo().toLowerCase().contains(termo.toLowerCase())) {
-                listaDeLivros.add(item);
-            }
-        }
-        return listaDeLivros;
-    }
-
-    public void listarAcervo() {
-        System.out.println("Livros no Acervo");
-        for (ItemDoAcervo item : acervo) {
-            System.out.println(item);
-        }
-    }
-
-    private Emprestimo buscarEmprestimoAtivoPorItem(ItemDoAcervo item){
-        for (var emprestimo : registroDeEmprestimos) {
-            if(emprestimo.getItem().getTitulo().equalsIgnoreCase(item.getTitulo())) {
-                System.out.println(item.getStatus());
-                return emprestimo;
+    public Emprestimo buscarEmprestimoAtivoPorLivro(Livro livro) {
+        for (Emprestimo emprestimo : registrosDeEmprestimos) {
+            if(emprestimo.getItem().getTitulo().equalsIgnoreCase(livro.getTitulo())) {
+                if(emprestimo.getDataDevolucaoPrevista() == null) { //ainda n foi devolvido
+                    return emprestimo;
+                }
             }
         }
         return null;
     }
 
     public void realizarDevolucao(String titulo) {
-        ItemDoAcervo item = pesquisarItemPorTitulo(titulo);
-        if(item == null) {
-            System.out.println("Erro: esse item não está cadastrado.");
+        Livro livro = pesquisarLivroPorTitulo(titulo); //chama o metodo
+        if(livro == null) {
+            System.out.println("Erro: esse livro não está cadastrado.");
             return;
         }
-        Emprestimo emprestimo = buscarEmprestimoAtivoPorItem(item);
+        Emprestimo emprestimo = buscarEmprestimoAtivoPorLivro(livro);
         if(emprestimo == null) {
             System.out.println("Erro: esse emprestimo não existe.");
             return;
         }
         LocalDate hoje = LocalDate.now();
-        long dias = ChronoUnit.DAYS.between(emprestimo.getDataDevolucaoPrevista(), hoje);
+        long dias = ChronoUnit.DAYS.between(emprestimo.getDataDevolucaoPrevista(), hoje); // ve se há atraso
 
         if(dias > 0) {
-            double multa = dias * item.getValorMultaPorDiaAtraso();
-            System.out.println("Item devolvido. Você precisa pagar uma multa de R$" + multa);
+            double multa = dias * VALOR_MULTA_DIA;
+            System.out.println("Livro devolvido. Você precisa pagar uma multa de R$" + multa);
         } else {
-            System.out.println("Item devolvido.");
+            System.out.println("Livro devolvido.");
         }
-        emprestimo.getItem()    .setStatus(StatusLivro.DISPONIVEL);
-        emprestimo.setDataDevolucaoPrevista(hoje);
+        emprestimo.getItem().setStatus(StatusLivro.DISPONIVEL); //muda o status do livro
+        emprestimo.setDataDevolucaoPrevista(hoje); //registra a data da devolução
+    }
+
+    public Livro pesquisarLivroPorTitulo(String titulo) {
+        for(Livro livro : this.acervo) {
+            if(livro.getTitulo().equalsIgnoreCase(titulo)) {
+                return livro;
+            }
+        }
+        return null;
+    }
+
+    public Usuario pesquisarUsuarioPorId(String id) {
+        for(Usuario usuario : this.listaDeUsuarios) {
+            if(usuario.getUser().equals(id)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    public void listarAcervo() {
+        System.out.println("Livros no Acervo");
+        for (var livro : acervo) { //var serve para ele descobrir o tipo automaticamente
+            System.out.println(livro);
+        }
+    }
+
+    public void cadastrarLivro(Livro livro) {
+        this.acervo.add(livro);
+        System.out.println("O livro " + livro.getTitulo() + " foi cadastrado.");
+    }
+
+    public void cadastrarUsuario(Usuario usuario) {
+        this.listaDeUsuarios.add(usuario);
+        System.out.println("O usuário " + usuario.getName() + " foi cadastrado.");
     }
 
     public static void main(String[] args) {
         Livro livroJavaComoProgramar = new Livro("Java Como Programar", "Deitel", 2014);
         Livro livroMemoria = new Livro("Memórias Póstumas de Brás Cubas", "Machado de Assis", 1881);
-        Usuario meuUsuario = new Usuario("Thiago", "Thiago Carvalho", "123");
+        Usuario meuUsuario = new Usuario("Thiago", "thiago", "123");
         Biblioteca minhaBiblioteca = new Biblioteca();
-        minhaBiblioteca.cadastrarItem(livroJavaComoProgramar);
-        minhaBiblioteca.cadastrarItem(livroMemoria);
+        minhaBiblioteca.cadastrarLivro(livroJavaComoProgramar);
+        minhaBiblioteca.cadastrarLivro(livroMemoria);
         minhaBiblioteca.cadastrarUsuario(meuUsuario);
         minhaBiblioteca.listarAcervo();
-        minhaBiblioteca.realizarEmprestimo("Thiago", "Memórias Póstumas de Brás Cubas");
-        minhaBiblioteca.buscarEmprestimoAtivoPorItem(livroMemoria);
-        Revista revistaveja = new Revista("veja",2024 ,1 );
-        System.out.println(revistaveja);
-        System.out.println(livroJavaComoProgramar);
-
-
+        minhaBiblioteca.realizarEmprestimo("123", "Java Como Programar");
+        minhaBiblioteca.listarAcervo();
+        minhaBiblioteca.registrosDeEmprestimos.get(0).setDataDevolucaoPrevista(LocalDate.of(2025, 8, 31));
+        minhaBiblioteca.realizarDevolucao("Java Como Programar");
+        minhaBiblioteca.listarAcervo();
     }
 }

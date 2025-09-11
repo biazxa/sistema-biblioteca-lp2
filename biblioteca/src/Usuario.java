@@ -57,7 +57,7 @@ public class Usuario {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { //compara elementos iguais para ver se há users iguais
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;

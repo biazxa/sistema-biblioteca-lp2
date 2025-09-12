@@ -4,6 +4,9 @@ public class ItemDoAcervo {
     private int ano;
     private StatusLivro status;
 
+    public ItemDoAcervo() {
+    }
+
     public String getTitulo() {
 
         return titulo;
